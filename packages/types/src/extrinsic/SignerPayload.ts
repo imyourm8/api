@@ -11,6 +11,7 @@ import { Struct } from '../codec/Struct';
 import { Vec } from '../codec/Vec';
 import { Text } from '../primitive/Text';
 import { u8 } from '../primitive/U8';
+import { u32 } from '../primitive/U32';
 
 export interface SignerPayloadType extends Codec {
   address: Address;
@@ -24,6 +25,7 @@ export interface SignerPayloadType extends Codec {
   signedExtensions: Vec<Text>;
   tip: Compact<Balance>;
   version: u8;
+  key: u32;
 }
 
 const knownTypes: Record<string, keyof InterfaceTypes> = {
@@ -32,6 +34,7 @@ const knownTypes: Record<string, keyof InterfaceTypes> = {
   blockNumber: 'BlockNumber',
   era: 'ExtrinsicEra',
   genesisHash: 'Hash',
+  key: 'u32',
   method: 'Call',
   nonce: 'Compact<Index>',
   runtimeVersion: 'RuntimeVersion',
@@ -113,6 +116,10 @@ export class GenericSignerPayload extends Struct implements ISignerPayload, Sign
     return this.get('version') as u8;
   }
 
+  get key (): u32 {
+    return this.get('key') as u32;
+  }
+
   /**
    * @description Creates an representation of the structure as an ISignerPayload JSON
    */
@@ -131,6 +138,7 @@ export class GenericSignerPayload extends Struct implements ISignerPayload, Sign
       blockNumber: this.blockNumber.toHex(),
       era: this.era.toHex(),
       genesisHash: this.genesisHash.toHex(),
+      key: this.key.toNumber(),
       method: this.method.toHex(),
       nonce: this.nonce.toHex(),
       signedExtensions: this.signedExtensions.map((e) => e.toString()),

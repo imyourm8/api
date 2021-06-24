@@ -139,10 +139,13 @@ export class GenericExtrinsicSignatureV4 extends Struct implements IExtrinsicSig
    * @description Creates a payload from the supplied options
    */
   public createPayload (method: Call, { blockHash, era, genesisHash, nonce, runtimeVersion: { specVersion, transactionVersion }, tip }: SignatureOptions): GenericExtrinsicPayloadV4 {
+    console.log('createPayload');
+
     return new GenericExtrinsicPayloadV4(this.registry, {
       blockHash,
       era: era || IMMORTAL_ERA,
       genesisHash,
+      key: 0,
       method: method.toHex(),
       nonce,
       specVersion,
