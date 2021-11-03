@@ -25,6 +25,8 @@ export class GenericExtrinsicPayloadV4 extends Struct {
   constructor (registry: Registry, value?: ExtrinsicPayloadValue | Uint8Array | string) {
     super(registry, {
       method: 'Bytes',
+      // eslint-disable-next-line sort-keys
+      key: 'u32',
       ...registry.getSignedExtensionTypes(),
       ...registry.getSignedExtensionExtra()
     }, value);
@@ -76,6 +78,13 @@ export class GenericExtrinsicPayloadV4 extends Struct {
    */
   public get specVersion (): u32 {
     return this.get('specVersion') as u32;
+  }
+
+  /**
+   * @description The application key
+   */
+  public get key (): Compact<u32> {
+    return this.get('key') as Compact<u32>;
   }
 
   /**

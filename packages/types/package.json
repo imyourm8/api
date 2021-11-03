@@ -1,9 +1,10 @@
 {
-  "name": "@polkadot/types",
-  "version": "4.1.2-3",
+  "name": "npptesttypes",
+  "version": "1.0.7",
   "type": "module",
-  "description": "Implementation of the Parity codec",
-  "main": "index.js",
+  "description": "Implementation of the Parity codec for Avail",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "sideEffects": [
     "./detectPackage.js",
     "./detectPackage.cjs"

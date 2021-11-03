@@ -84,6 +84,11 @@ export interface SignerPayloadJSON {
    * @description The version of the extrinsic we are dealing with
    */
   version: number;
+
+  /**
+   * @description Application id
+   */
+  key: number;
 }
 
 export interface SignerPayloadRawBase {
@@ -158,6 +163,7 @@ export interface SignatureOptions {
   signedExtensions?: string[];
   signer?: Signer;
   tip?: AnyNumber;
+  key?: AnyNumber;
 }
 
 interface ExtrinsicSignatureBase {
@@ -178,6 +184,7 @@ export interface ExtrinsicPayloadValue {
   specVersion: AnyNumber;
   tip: AnyNumber;
   transactionVersion: AnyNumber;
+  key: AnyNumber;
 }
 
 export interface IExtrinsicSignature extends ExtrinsicSignatureBase, Codec {

@@ -7,6 +7,7 @@ import type { ExtrinsicPayloadValue, IExtrinsicSignature, IKeyringPair, Registry
 import type { ExtrinsicSignatureOptions } from '../types';
 
 import { isU8a, u8aConcat, u8aToHex } from '@polkadot/util';
+import { u32 } from '@polkadot/types/primitive/U32';
 
 import { Compact } from '../../codec/Compact';
 import { Enum } from '../../codec/Enum';
@@ -34,6 +35,8 @@ export class GenericExtrinsicSignatureV4 extends Struct implements IExtrinsicSig
       signer: 'Address',
       // eslint-disable-next-line sort-keys
       signature: 'ExtrinsicSignature',
+      // eslint-disable-next-line sort-keys
+      key: 'u32',
       ...registry.getSignedExtensionTypes()
     }, GenericExtrinsicSignatureV4.decodeExtrinsicSignature(value, isSigned));
 
@@ -114,12 +117,20 @@ export class GenericExtrinsicSignatureV4 extends Struct implements IExtrinsicSig
     return this.get('tip') as Compact<Balance>;
   }
 
-  protected _injectSignature (signer: Address, signature: ExtrinsicSignature, { era, nonce, tip }: GenericExtrinsicPayloadV4): IExtrinsicSignature {
+  /**
+   * @description The application key
+   */
+  public get key (): Compact<u32> {
+    return this.get('key') as Compact<u32>;
+  }
+
+  protected _injectSignature (signer: Address, signature: ExtrinsicSignature, { era, key, nonce, tip }: GenericExtrinsicPayloadV4): IExtrinsicSignature {
     this.set('era', era);
     this.set('nonce', nonce);
     this.set('signer', signer);
     this.set('signature', signature);
     this.set('tip', tip);
+    this.set('key', key);
 
     return this;
   }
@@ -138,11 +149,12 @@ export class GenericExtrinsicSignatureV4 extends Struct implements IExtrinsicSig
   /**
    * @description Creates a payload from the supplied options
    */
-  public createPayload (method: Call, { blockHash, era, genesisHash, nonce, runtimeVersion: { specVersion, transactionVersion }, tip }: SignatureOptions): GenericExtrinsicPayloadV4 {
+  public createPayload (method: Call, { blockHash, era, genesisHash, key, nonce, runtimeVersion: { specVersion, transactionVersion }, tip }: SignatureOptions): GenericExtrinsicPayloadV4 {
     return new GenericExtrinsicPayloadV4(this.registry, {
       blockHash,
       era: era || IMMORTAL_ERA,
       genesisHash,
+      key: key || 0,
       method: method.toHex(),
       nonce,
       specVersion,
